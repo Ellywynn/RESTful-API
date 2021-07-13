@@ -1,0 +1,29 @@
+GET http://localhost:5000/store HTTP/1.1
+
+###
+
+GET http://localhost:5000/store/1 HTTP/1.1
+
+###
+
+POST http://localhost:5000/store HTTP/1.1
+Content-Type: application/json
+
+{
+    "address": "somestring",
+    "city": "1"
+}
+
+###
+
+DELETE http://localhost:5000/store/1 HTTP/1.1
+
+###
+
+PUT http://localhost:5000/store/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "address": "newstring1234",
+    "city": "2"
+}

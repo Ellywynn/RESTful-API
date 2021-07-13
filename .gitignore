@@ -1,2 +1,4 @@
 #NODE
 node_modules
+dev
+.env
