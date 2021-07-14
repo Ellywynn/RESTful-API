@@ -1,18 +1,18 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
 
-const City = db.define('cities', {
+const BookType = db.define('book_types', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
-    city: {
+    type: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
     },
 });
 
-module.exports = City;
+module.exports = BookType;

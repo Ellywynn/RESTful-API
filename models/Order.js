@@ -1,18 +1,21 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
 
-const City = db.define('cities', {
+const Order = db.define('orders', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
-    city: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+    order_time: {
+        type: DataTypes.DATE,
+        allowNull: false
     },
+    items: {
+        type: DataTypes.JSON,
+        allowNull: false
+    }
 });
 
-module.exports = City;
+module.exports = Order;

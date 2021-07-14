@@ -2,7 +2,7 @@ const {DataTypes} = require('sequelize');
 const db = require('../config/database');
 
 const EmployeePosition = db.define('employee_positions', {
-    position_id: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -10,7 +10,8 @@ const EmployeePosition = db.define('employee_positions', {
     },
     position: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
 });
 

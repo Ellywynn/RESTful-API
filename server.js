@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config();
 const db = require('./config/database');
-const models = require('./models');
+const models = require('./models/index');
 
 const app = express();
 
@@ -27,8 +27,6 @@ const start = async () => {
         console.error(`An error occured while initializing server: ${error.message}`);
     }
 }
-
-// testing dev branch
 
 // run server
 start();

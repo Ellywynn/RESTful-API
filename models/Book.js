@@ -2,7 +2,7 @@ const {DataTypes} = require('sequelize');
 const db = require('../config/database');
 
 const Book = db.define('books', {
-    book_id: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -13,9 +13,7 @@ const Book = db.define('books', {
         allowNull: false
     },
     price: {
-        type: DataTypes.NUMBER({
-            precision: 2
-        }),
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
     description: {
