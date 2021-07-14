@@ -1,10 +1,10 @@
 const storeController = require('../controllers/storeController');
 const router = require('express').Router();
 
-router.get('/', storeController.getAllStores);
-router.get('/:id', storeController.getOneStore);
-router.post('/', storeController.createStore);
-router.put('/:id', storeController.updateStore);
-router.delete('/:id', storeController.deleteStore);
+router.get('/', storeController.getAll);
+router.get('/:id', storeController.getOne);
+router.post('/', storeController.create);
+router.put('/:id', storeController.update);
+router.delete('/:id', storeController.delete);
 
 module.exports = router;

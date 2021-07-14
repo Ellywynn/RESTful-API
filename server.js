@@ -8,6 +8,7 @@ const app = express();
 
 const storeRouter = require('./routes/store');
 const cityRouter = require('./routes/city');
+const authorRouter = require('./routes/author');
 
 const PORT = process.env.PORT || 5000;
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api/store', storeRouter);
 app.use('/api/city', cityRouter);
+app.use('/api/author', authorRouter);
 
 const start = async () => {
     try {

@@ -18,9 +18,7 @@ class CityController {
         }
         try {
             const data = await City.findOne({
-                where: {
-                    store_id: id
-                }
+                where: {id}
             });
             res.status(200).send({data});
         } catch (error) {
