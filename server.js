@@ -1,11 +1,11 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import db from './config/database';
+const express = require('express');
+const dotenv = require('dotenv');
+dotenv.config();
+const db = require('./config/database');
+
 const app = express();
 
-dotenv.config();
-
-import storeRouter from './routes/store';
+const storeRouter = require('./routes/store');
 
 const PORT = process.env.PORT || 5000;
 

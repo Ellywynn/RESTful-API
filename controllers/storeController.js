@@ -1,4 +1,4 @@
-import Store from '../models/Store';
+const Store = require('../models/Store');
 
 class StoreController {
     async getAllStores(req, res) {
@@ -103,4 +103,4 @@ class StoreController {
     }
 }
 
-export default new StoreController;
+module.exports = new StoreController;
