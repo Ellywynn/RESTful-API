@@ -1,5 +1,4 @@
-const {Op} = require('sequelize');
-const Store = require('../models/Store');
+import Store from '../models/Store';
 
 class StoreController {
     async getAllStores(req, res) {
@@ -104,4 +103,4 @@ class StoreController {
     }
 }
 
-module.exports = new StoreController;
+export default new StoreController;

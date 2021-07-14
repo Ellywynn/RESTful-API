@@ -1,4 +1,4 @@
-const {Sequelize} = require('sequelize');
+import {Sequelize} from 'sequelize';
 
 const DB_NAME = process.env.DB_NAME,
       DB_PASSWORD = process.env.DB_PASSWORD,
@@ -18,4 +18,4 @@ const db = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     logging: process.env.NODE_ENV == 'dev' ? console.log() : false
 });
 
-module.exports = db;
+export default db;
