@@ -1,19 +1,18 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
-const isUnique = require('../lib/isUnique');
 
-const Role = db.define('roles', {
+const UserGroup = db.define('groups', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
-    role: {
+    group: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: isUnique()
-    }
+        unique: true
+    },
 });
 
-module.exports = Role;
+module.exports = UserGroup;

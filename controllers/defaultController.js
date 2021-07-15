@@ -1,29 +1,39 @@
 const BaseController = require('./baseController');
 
-class DefaultController {
+/*
+    This controller uses basic CRUD operations.
+    It just accepts the model for operations on appropriate data.
+*/
+
+class CRUDController {
     constructor(model) {
         this.model = model;
     }
     getAll = async(req, res) => {
-        const {data, code} = await BaseController.getAll(this.model);
-        res.status(code).send(data);
+        const {error, data, code} = await BaseController.getAll(this.model);
+        const msg = error ? {error} : {data};
+        res.status(code).send(msg);
     }
     getOne = async (req, res) => {
-        const {data, code} = await BaseController.getOne(this.model, req);
-        res.status(code).send(data);
+        const {error, data, code} = await BaseController.getOne(this.model, req);
+        const msg = error ? {error} : {data};
+        res.status(code).send(msg);
     }
     create = async (req, res) => {
-        const {data, code} = await BaseController.create(this.model, req);
-        res.status(code).send(data);
+        const {error, data, code} = await BaseController.create(this.model, req);
+        const msg = error ? {error} : {data};
+        res.status(code).send(msg);
     }
     update = async (req, res) => {
-        const {data, code} = await BaseController.update(this.model, req);
-        res.status(code).send(data);
+        const {error, data, code} = await BaseController.update(this.model, req);
+        const msg = error ? {error} : {data};
+        res.status(code).send(msg);
     }
     delete = async (req, res) => {
         const {error, data, code} = await BaseController.delete(this.model, req);
-        res.status(code).send(error ? error : data);
+        const msg = error ? {error} : {data};
+        res.status(code).send(msg);
     }
 }
 
-module.exports = DefaultController;
+module.exports = CRUDController;

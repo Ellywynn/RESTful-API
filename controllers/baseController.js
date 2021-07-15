@@ -8,6 +8,7 @@ class BaseController {
     static async getAll(model) {
         try {
             const data = await model.findAll();
+            if(!data.length) return {data: [], code: 204};
             return {data, code: 200};
         } catch (error) {
             return {error: error.message, code: 500}
@@ -32,16 +33,15 @@ class BaseController {
     }
     // Create instance
     static async create(model, req) {
-        // Get model schema
-        const schema = await model.describe();
-        // Validate each column
-        Object.keys(schema).forEach(key => {
-            if(!(key in req.body) && key !== 'id') return {error: 'Invalid request body', code: 400};
-        });
-
         try {
             // Remove id property
             delete req.body.id;
+            // Get model schema
+            const schema = await model.describe();
+            // Validate each column
+            Object.keys(schema).forEach(key => {
+                if(!(key in req.body) && key !== 'id') return {error: 'Invalid request body', code: 400};
+            });
             const data = await model.create(req.body);
             return {data: data.toJSON(), code: 201};
         } catch (error) {
@@ -55,7 +55,7 @@ class BaseController {
         if(!id) return {error: 'Invalid request'};
 
         try {
-            const deleted = await model.destroy({where: id});
+            const deleted = await model.destroy({where: {id}});
 
             return deleted ? {data: req.body, code: 200} : {error: `Cannot delete or find item with id ${id}`, code: 400};
         } catch (error) {
@@ -65,16 +65,16 @@ class BaseController {
     // Update instance
     static async update(model, req) {
         const id = parseInt(req.params.id);
-        // Get model schema
-        const schema = await model.describe();
-        // Validate each column
-        Object.keys(schema).forEach(key => {
-            if(!(key in req.body) && key !== 'id')
-                return {error: 'Invalid request body', code: 400};
-        });
-
         try {
-            const updated = await model.update(req.body, {where: id});
+            delete req.body.id;
+            // Get model schema
+            const schema = await model.describe();
+            // Validate each column
+            Object.keys(schema).forEach(key => {
+                if(!(key in req.body) && key !== 'id')
+                    return {error: 'Invalid request body', code: 400};
+            });
+            const updated = await model.update(req.body, {where: {id}});
     
             return updated 
              ? {data: req.body, code: 200}

@@ -13,6 +13,7 @@ const Promotion = require('./Promotion');
 const Order = require('./Order');
 const Basket = require('./Basket');
 const BasketBook = require('./BasketBook');
+const UserGroup = require('./UserGroup');
 
 // Store - City
 City.hasMany(Store);
@@ -52,11 +53,25 @@ Promotion.belongsToMany(Book, {through: 'book_promotions'});
 
 // User - Role
 Role.hasMany(User);
-User.belongsTo(Role);
+User.belongsTo(Role, {
+    foreignKey: {
+        allowNull: false,
+        defaultValue: 1 // Default User
+    }
+});
+
+// User - User group
+UserGroup.hasMany(User);
+User.belongsTo(UserGroup, {
+    foreignKey: {
+        allowNull: false,
+        defaultValue: 1 // Users
+    }
+});
 
 // User - Order
-Order.hasMany(User);
-User.belongsTo(Order);
+User.hasMany(Order);
+Order.belongsTo(User);
 
 // User - Basket
 User.hasOne(Basket);
@@ -68,5 +83,5 @@ BasketBook.belongsTo(Basket);
 
 module.exports = {
     Author, Basket, BasketBook, Book, BookType, City, Employee, EmployeePosition,
-    Genre, Language, Order, Promotion, Role, Store, User
+    Genre, Language, Order, Promotion, Role, Store, User, UserGroup
 };
