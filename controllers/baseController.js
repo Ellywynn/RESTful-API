@@ -23,7 +23,7 @@ class BaseController {
             const data = await model.findOne({where: id});
 
             // If there's no suck instance, return an empty object
-            if(data === null) return {data: {}, code: 200}; 
+            if(data === null) return {data: {}, code: 204}; 
 
             return {data, code: 200};
         } catch (error) {
