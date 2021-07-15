@@ -1,5 +1,3 @@
-const db = require('../config/database');
-
 const Employee = require('./Employee');
 const EmployeePosition = require('./EmployeePosition');
 const Store = require('./Store');
@@ -68,4 +66,7 @@ Basket.belongsTo(User);
 Basket.hasMany(BasketBook);
 BasketBook.belongsTo(Basket);
 
-module.exports = db.models;
+module.exports = {
+    Author, Basket, BasketBook, Book, BookType, City, Employee, EmployeePosition,
+    Genre, Language, Order, Promotion, Role, Store, User
+};

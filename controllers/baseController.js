@@ -1,70 +1,87 @@
+/*
+    This class uses CRUD operations based on the model.
+    It really helps to simplify controller development. 
+*/
+
 class BaseController {
+    // Get all instances
     static async getAll(model) {
         try {
             const data = await model.findAll();
-            return {data};
+            return {data, code: 200};
         } catch (error) {
-            return {error: error.message}
+            return {error: error.message, code: 500}
         }
     }
+    // Get one instance by ID
     static async getOne(model, req) {
         const id = parseInt(req.params.id);
 
-        if(!id) return {error: 'Invalid link'};
+        if(!id) return {error: 'Invalid link', code: 400};
 
         try {
-            const data = await model.findOne({where: {id}});
-            if(data === null) return {};
-            return {data};
+            const data = await model.findOne({where: id});
+
+            // If there's no suck instance, return an empty object
+            if(data === null) return {data: {}, code: 200}; 
+
+            return {data, code: 200};
         } catch (error) {
-            return {error: error.message};
+            return {error: error.message, code: 500};
         }
     }
+    // Create instance
     static async create(model, req) {
+        // Get model schema
         const schema = await model.describe();
+        // Validate each column
         Object.keys(schema).forEach(key => {
-            if(!(key in req.body) && key !== 'id') return {error: 'Invalid request body'};
+            if(!(key in req.body) && key !== 'id') return {error: 'Invalid request body', code: 400};
         });
 
         try {
+            // Remove id property
             delete req.body.id;
             const data = await model.create(req.body);
-            return {data: data.toJSON()};
+            return {data: data.toJSON(), code: 201};
         } catch (error) {
-            return {error: error.message}
+            return {error: error.message, code: 500}
         }
     }
+    // Delete instance
     static async delete(model, req) {
         const id = parseInt(req.params.id);
 
         if(!id) return {error: 'Invalid request'};
 
         try {
-            const deleted = await model.destroy({where: {id}});
+            const deleted = await model.destroy({where: id});
 
-            return deleted ? req.body : {error: `Cannot delete or find item with id ${id}`};
+            return deleted ? {data: req.body, code: 200} : {error: `Cannot delete or find item with id ${id}`, code: 400};
         } catch (error) {
-            return {error: error.message}
+            return {error: error.message, code: 500}
         }
     }
+    // Update instance
     static async update(model, req) {
         const id = parseInt(req.params.id);
+        // Get model schema
         const schema = await model.describe();
+        // Validate each column
         Object.keys(schema).forEach(key => {
-            if(!(key in req.body) && key !== 'id') return {error: 'Invalid request body'};
+            if(!(key in req.body) && key !== 'id')
+                return {error: 'Invalid request body', code: 400};
         });
 
         try {
-            const updated = await model.update(req.body, {where: {id}});
+            const updated = await model.update(req.body, {where: id});
     
-            return updated ? req.body : {error: `Cannot update item with id ${id}`};
+            return updated 
+             ? {data: req.body, code: 200}
+             : {error: `Cannot update item with id ${id}`, code: 500};
         } catch (error) {
-            return {error: error.message}
+            return {error: error.message, code: 500}
         }
-    }
-    static async responseStatus(data) {
-        if('error' in data) return 500;
-        return 200;
     }
 }
 

@@ -2,13 +2,14 @@ const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config();
 const db = require('./config/database');
-const models = require('./models/index');
+const controllers = require('./controllers/index');
+const defaultRouter = require('./routes/router');
 
 const app = express();
 
-const storeRouter = require('./routes/store');
-const cityRouter = require('./routes/city');
-const authorRouter = require('./routes/author');
+const storeRouter = defaultRouter(controllers.storeController);
+const cityRouter = defaultRouter(controllers.cityController);
+const authorRouter = defaultRouter(controllers.authorController);
 
 const PORT = process.env.PORT || 5000;
 
