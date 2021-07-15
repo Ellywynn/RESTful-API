@@ -11,28 +11,23 @@ class CRUDController {
     }
     getAll = async(req, res) => {
         const {error, data, code} = await BaseController.getAll(this.model);
-        const msg = error ? {error} : {data};
-        res.status(code).send(msg);
+        res.status(code).send({data, error});
     }
     getOne = async (req, res) => {
         const {error, data, code} = await BaseController.getOne(this.model, req);
-        const msg = error ? {error} : {data};
-        res.status(code).send(msg);
+        res.status(code).send({data, error});
     }
     create = async (req, res) => {
         const {error, data, code} = await BaseController.create(this.model, req);
-        const msg = error ? {error} : {data};
-        res.status(code).send(msg);
+        res.status(code).send({data, error});
     }
     update = async (req, res) => {
         const {error, data, code} = await BaseController.update(this.model, req);
-        const msg = error ? {error} : {data};
-        res.status(code).send(msg);
+        res.status(code).send({data, error});
     }
     delete = async (req, res) => {
         const {error, data, code} = await BaseController.delete(this.model, req);
-        const msg = error ? {error} : {data};
-        res.status(code).send(msg);
+        res.status(code).send({data, error});
     }
 }
 
