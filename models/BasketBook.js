@@ -4,7 +4,8 @@ const db = require('../config/database');
 const BasketBook = db.define('basket_book', {
     count: {
         type: DataTypes.INTEGER,
-        defaultValue: 1
+        defaultValue: 1,
+        validate: {isNumeric: {msg: 'Count must be a number'}}
     }
 });
 

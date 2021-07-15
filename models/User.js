@@ -1,6 +1,6 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
-
+const isUnique = require('../lib/isUnique');
 
 const User = db.define('users', {
     id: {
@@ -12,21 +12,25 @@ const User = db.define('users', {
     username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-            isUnique: (username) => {
-                console.log(this);
-            }
-        }
+        unique: isUnique('Username already taken'),
+        validate: {isAlphanumeric: {msg: 'Username must contain characters or numbers'}}
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: isUnique('Email already in use'),
+        validate: {isEmail: {msg: 'Wrong email format'}}
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isAlphanumeric: {msg: 'Password must contain characters or numbers'},
+            len: {
+                args: [8, 20],
+                msg: 'Password must be 8 to 20 characters long'
+            }
+        }
     },
     avatar: {
         type: DataTypes.STRING,
@@ -38,7 +42,8 @@ const User = db.define('users', {
     registered_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW,
+        validate: {isDate: {msg: 'Register date must be type of Date'}}
     },
 });
 

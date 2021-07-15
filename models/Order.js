@@ -10,7 +10,8 @@ const Order = db.define('orders', {
     },
     order_time: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        validate: {isDate: {msg: 'Order time must be type of Date'}}
     },
     items: {
         type: DataTypes.JSON,

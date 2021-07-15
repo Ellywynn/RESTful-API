@@ -8,21 +8,41 @@ const Book = db.define('books', {
         autoIncrement: true,
         allowNull: false
     },
-    name: {
+    title: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {isAlphanumeric: {msg: 'Title must contain only characters or numbers'}}
     },
     price: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
+        allowNull: false,
+        validate: {isDecimal: {msg: 'Price must contain only decimal numbers'}}
     },
     description: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isAlphanumeric: {msg: 'Description must contain only characters or numbers'},
+            len: {
+                args: [15, 400],
+                msg: 'Description length must be 15 to 400 characters long'
+            }
+        }
     },
     year: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate:{
+            isNumeric: {msg: 'Year must be a number'},
+            max: {
+                args: 2100,
+                msg: 'Year cannot be greater than 2100'
+            },
+            min: {
+                args: 0,
+                msg: 'Year cannot be less than 0'
+            }
+        }
     },
 });
 

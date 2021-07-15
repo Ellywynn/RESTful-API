@@ -9,31 +9,38 @@ const Employee = db.define('employees', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {isAlpha: {msg: 'Name must contain only characters'}}
     },
     surname: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {isAlpha: {msg: 'Surname must contain only characters'}}
     },
     patronymic: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {isAlpha: {msg: 'Patronymic must contain only characters'}}
     },
     age: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {isNumeric: {msg: 'Age must contain only numbers'}}
     },
     hired_at: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        validate: {isDate: {msg: 'Order time must be type of Date'}}
     },
     telephone: {
         type: DataTypes.CHAR(10),
-        allowNull: false
+        allowNull: false,
+        validate: {isNumeric: {msg: 'Telephone must contain only numbers'}}
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {isEmail: {msg: 'Wrong email format'}}
     },
 });
 

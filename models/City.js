@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
+const isUnique = require('../lib/isUnique');
 
 const City = db.define('cities', {
     id: {
@@ -11,7 +12,8 @@ const City = db.define('cities', {
     city: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: isUnique(),
+        validate: {isAlpha: {msg: 'City must contain only characters'}}
     },
 });
 

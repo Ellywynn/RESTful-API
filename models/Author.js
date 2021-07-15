@@ -10,7 +10,8 @@ const Author = db.define('authors', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {isAlpha: {msg: 'Name must contain only characters'}}
     },
 });
 

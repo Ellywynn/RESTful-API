@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
+const isUnique = require('../lib/isUnique');
 
 const BookType = db.define('book_types', {
     id: {
@@ -11,7 +12,8 @@ const BookType = db.define('book_types', {
     type: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: isUnique(),
+        validate: {isAlpha: {msg: 'Book Type must contain only characters'}}
     },
 });
 

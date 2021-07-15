@@ -12,7 +12,8 @@ const Role = db.define('roles', {
     role: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: isUnique()
+        unique: isUnique(),
+        validate: {isAlpha: {msg: 'Role must contain only characters'}}
     }
 });
 

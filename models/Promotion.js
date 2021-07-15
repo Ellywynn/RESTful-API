@@ -10,7 +10,8 @@ const Promotion = db.define('promotions', {
     },
     promotion: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
+        validate: {isFloat: {msg: 'Promotion must contain only floating numbers'}}
     },
 });
 

@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
+const isUnique = require('../lib/isUnique');
 
 const Store = db.define('stores', {
     id: {
@@ -10,7 +11,8 @@ const Store = db.define('stores', {
     },
     address: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: isUnique()
     },
 });
 

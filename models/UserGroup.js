@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
+const isUnique = require('../lib/isUnique');
 
 const UserGroup = db.define('groups', {
     id: {
@@ -11,7 +12,8 @@ const UserGroup = db.define('groups', {
     group: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: isUnique(),
+        validate: {isAlpha: {msg: 'Group must contain only characters'}}
     },
 });
 

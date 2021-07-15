@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/database');
+const isUnique = require('../lib/isUnique');
 
 const Genre = db.define('genres', {
     id: {
@@ -11,7 +12,8 @@ const Genre = db.define('genres', {
     genre: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: isUnique(),
+        validate: {isAlpha: {msg: 'Genre must contain only characters'}}
     },
 });
 
