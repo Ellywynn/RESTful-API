@@ -1,5 +1,6 @@
 const validateSchema = require('../lib/validateSchema');
 const getError = require('../lib/getError');
+const sendResponse = require('../lib/sendResponse');
 
 /*
     This class uses CRUD operations based on the model.
@@ -7,74 +8,75 @@ const getError = require('../lib/getError');
 */
 
 class BaseController {
-    // Get all instances
-    static async getAll(model) {
+    constructor(model) {
+        this.model = model;
+    }
+    // Create instance
+    create = async (req, res) => {
         try {
-            const data = await model.findAll();
-            if(!data.length) return {data: [], code: 204};
-            return {data, code: 200};
+            const valid = await validateSchema(this.model, req.body);
+            if(!valid) return sendResponse(res, 400, getError('Invalid request body'));
+
+            const data = await this.model.create(req.body);
+            sendResponse(res, 201, data.toJSON());
         } catch (error) {
-            return getError(error.message);
+            sendResponse(res, 500, getError(`Internal error: ${error.message}`));
+        }
+    }
+    // Get all instances
+    getAll = async (req, res) => {
+        try {
+            const data = await this.model.findAll();
+            if(!data.length) return sendResponse(res, 204, {data: []});;
+            sendResponse(res, 200, data);
+        } catch (error) {
+            sendResponse(res, 500, getError(`Internal error: ${error.message}`));
         }
     }
     // Get one instance by id
-    static async getOne(model, req) {
+    getOne = async (req, res) => {
         const id = parseInt(req.params.id);
-
-        if(!id) return getError('Invalid link', 400);
+        if(!id) return sendResponse(res, 400, getError('Invalid link'));
 
         try {
-            const data = await model.findOne({where: id});
+            const data = await this.model.findOne({where: {id}});
 
             // If there's no such instance, return an empty object
-            if(data === null) return {data: {}, code: 204}; 
+            if(data === null) return sendResponse(res, 204, {data: {}}); 
 
-            return {data, code: 200};
+            sendResponse(res, 200, data);
         } catch (error) {
-            return getError(error.message);
-        }
-    }
-    // Create instance
-    static async create(model, req) {
-        try {
-            const valid = await validateSchema(model, req.body);
-            if(!valid) return getError('Invalid request body', 400);
-
-            const data = await model.create(req.body);
-            return {data: data.toJSON(), code: 201};
-        } catch (error) {
-            return getError(error.message);
-        }
-    }
-    // Delete instance
-    static async delete(model, req) {
-        const id = parseInt(req.params.id);
-
-        if(!id) return {error: 'Invalid request'};
-
-        try {
-            const deleted = await model.destroy({where: {id}});
-
-            return deleted ? {data: req.body, code: 200}
-             : getError(`Cannot delete item with id ${id}`, 400);;
-        } catch (error) {
-            return getError(error.message);
+            sendStatus(res, 500, getError(`Internal error: ${error.message}`));
         }
     }
     // Update instance
-    static async update(model, req) {
+    async update(model, req) {
         const id = parseInt(req.params.id);
         try {
-            const valid = validateSchema(model, req.body);
-            if(!valid) return getError('Invalid request body', 400);
+            const valid = validateSchema(this.model, req.body);
+            if(!valid) return sendResponse(res, 400, getError('Invalid request body'));
 
-            const updated = await model.update(req.body, {where: {id}});
+            const updated = await this.model.update(req.body, {where: {id}});
     
-            return updated 
-             ? {data: req.body, code: 200}
-             : getError(`Cannot update item with id ${id}`);
+            updated 
+             ? sendResponse(res, 200, {data: req.body})
+             : sendResponse(res, 400, getError(`Cannot update item with id ${id}. Maybe there is no item with this id.`));
         } catch (error) {
-            return getError(error.message);
+            sendStatus(res, 500, getError(`Internal error: ${error.message}`));
+        }
+    }
+    // Delete instance
+    delete = async (req, res) => {
+        const id = parseInt(req.params.id);
+        if(!id) return sendResponse(res, 400, getError('Invalid link'));
+
+        try {
+            const deleted = await this.model.destroy({where: {id}});
+            deleted
+             ? sendResponse(res, 200, {data: req.body})
+             : sendResponse(res, 400, getError(`Cannot delete item with id ${id}. Maybe there is no item with this id.`));
+        } catch (error) {
+            sendStatus(res, 500, getError(`Internal error: ${error.message}`));
         }
     }
 }

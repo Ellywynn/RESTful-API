@@ -6,8 +6,8 @@ const Book = require('./Book');
 const Author = require('./Author');
 const BookType = require('./BookType');
 const Language = require('./Language');
-const Role = require('./Role');
 const User = require('./User');
+const Role = require('./Role');
 const Genre = require('./Genre');
 const Promotion = require('./Promotion');
 const Order = require('./Order');
@@ -55,8 +55,7 @@ Promotion.belongsToMany(Book, {through: 'book_promotions'});
 Role.hasMany(User);
 User.belongsTo(Role, {
     foreignKey: {
-        allowNull: false,
-        defaultValue: 1 // Default User
+        allowNull: false
     }
 });
 
@@ -64,8 +63,7 @@ User.belongsTo(Role, {
 UserGroup.hasMany(User);
 User.belongsTo(UserGroup, {
     foreignKey: {
-        allowNull: false,
-        defaultValue: 1 // Users
+        allowNull: false
     }
 });
 
