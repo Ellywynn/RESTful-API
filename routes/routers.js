@@ -1,5 +1,6 @@
 const controllers = require('../controllers/index');
 const Router = require('./CRUDRouter');
+const AuthRouter = require('./auth');
 
 module.exports = {
     store: Router(controllers.store),
@@ -18,4 +19,5 @@ module.exports = {
     employeePos: Router(controllers.employeePos),
     basket: Router(controllers.basket),
     basketBook: Router(controllers.basketBook),
+    auth: AuthRouter
 }

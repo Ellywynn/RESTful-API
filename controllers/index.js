@@ -17,5 +17,5 @@ module.exports = {
     userGroup: new Controller(models.UserGroup),
     order: new Controller(models.Order),
     basket: new Controller(models.Basket),
-    basketBook: new Controller(models.BasketBook),
+    basketBook: new Controller(models.BasketBook)
 }

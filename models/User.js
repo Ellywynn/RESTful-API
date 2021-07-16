@@ -24,26 +24,20 @@ const User = db.define('users', {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            isAlphanumeric: {msg: 'Password must contain characters or numbers'},
-            len: {
-                args: [8, 20],
-                msg: 'Password must be 8 to 20 characters long'
-            }
-        }
     },
     avatar: {
         type: DataTypes.STRING,
         defaultValue: ''
     },
     address: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: ''
     },
     registered_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
-        validate: {isDate: {msg: 'Register date must be type of Date'}}
+        defaultValue: db.literal('CURRENT_TIMESTAMP'),
+        validate: {isDate: {msg: 'Registered date must be type of Date'}}
     },
 });
 

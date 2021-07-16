@@ -31,10 +31,12 @@ app.use('/api/book', routers.book);
 app.use('/api/basket/books', routers.basketBook);
 app.use('/api/basket', routers.basket);
 
+app.use('/auth', routers.auth);
+
 const start = async () => {
     try {
         await db.authenticate();
-        await db.sync( /* {force: process.env.NODE_ENV === 'dev'} */ ); // create tables for all models if don't exist
+        await db.sync({alter: process.env.NODE_ENV === 'dev'}); // create tables for all models if don't exist
         console.log(`Successfully connected to the database ${process.env.DB_NAME}`);
         app.listen(PORT, console.log(`Server started at http://localhost:${PORT}`));
     } catch (error) {

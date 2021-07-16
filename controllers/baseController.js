@@ -37,7 +37,7 @@ class BaseController {
     // Create instance
     static async create(model, req) {
         try {
-            const valid = await validateSchema(model, req);
+            const valid = await validateSchema(model, req.body);
             if(!valid) return getError('Invalid request body', 400);
 
             const data = await model.create(req.body);
@@ -65,7 +65,7 @@ class BaseController {
     static async update(model, req) {
         const id = parseInt(req.params.id);
         try {
-            const valid = validateSchema(model, req);
+            const valid = validateSchema(model, req.body);
             if(!valid) return getError('Invalid request body', 400);
 
             const updated = await model.update(req.body, {where: {id}});
