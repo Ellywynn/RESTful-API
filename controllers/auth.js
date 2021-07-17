@@ -2,49 +2,57 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const validateSchema = require('../lib/validateSchema');
 const getError = require("../lib/getError");
+const sendResponse = require('../lib/sendResponse');
 const User = require('../models/User');
+const {Op} = require('sequelize');
 
-const saltCount = 10;
+const saltCount = 10; // used for bcrypt hash
 
+/** This class does authentication and authorization operations */
 class AuthController {
     async login(req, res) {
         try {
-            if(!req.body) {
-                const {error, code} = getError('Invalid request body', 400);
-                return res.status(code).send({error});
-            }
+            if(!req.body) return sendResponse(res, 400, getError('Invalid request body'));
 
-            const {email, username, password} = req.body;
+            const {login, password} = req.body;
 
-            if(!email && !username) {
-                const {error, code} = getError('Enter email or username', 400);
-                return res.status(code).send({error});
-            }
+            if(!login) return sendResponse(res, 400, getError('Enter email or username'));
 
-            if(!password) {
-                const {error, code} = getError('Enter password', 400);
-                return res.status(code).send({error});
-            }
+            if(!password) return sendResponse(res, 400, getError('Enter password'));
 
-            const user = User.findOne({where: {email, username}});
-
+            const user = await User.findOne({
+                where: {
+                    [Op.or]: {
+                        email: login,
+                        username: login
+                    }
+            }});
+            if(!user) return sendResponse(res, 400, getError('Invalid email, username or password'));
+            console.log(user);
             const match = await bcrypt.compare(password, user.password);
+
+            // login and password are correct
             if(match) {
-                // login
+                const payload = {
+                    id: user.id, email: user.email, username: user.username, role: user.role
+                };
+                const token = jwt.sign(
+                    payload,
+                    process.env.JWT_KEY
+                );
+                req.user = payload;
+                return res.status(200).send({user: payload, token});
             } 
 
-            res.status(400).send({error: 'Invalid email, username or password'});
+            sendResponse(res, 400, getError('Invalid email, username or password'));
         } catch (error) {
-            
+            sendResponse(res, 500, getError(`Internal server error: ${error.message}`));
         }
     }
     async register(req, res) {
         try {
             const valid = await validateSchema(User, req.body);
-            if(!valid) {
-                const {error, code} = getError('Invalid request body', 400);
-                return res.status(code).send({error});
-            }
+            if(!valid) return sendResponse(res, 400, getError('Invalid request body'));
 
             let {username, email, password, avatar, address} = req.body;
             email = email.toLowerCase();
@@ -55,10 +63,13 @@ class AuthController {
             }
 
             const data = await User.create(user);
-            res.status(201).send({data: data.toJSON()});
+            sendResponse(res, 201, {data: data.toJSON()});
         } catch(error) {
-            res.status(500).send({error: `Internal server error: ${error.message}`});
+            sendResponse(res, 500, getError(`Internal server error: ${error.message}`));
         }
+    }
+    async logout(req, res) {
+
     }
 }
 

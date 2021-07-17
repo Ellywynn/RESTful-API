@@ -1,4 +1,4 @@
-// initialize environment variables
+// Initialize environment variables
 require('dotenv').config();
 
 const express = require('express');
@@ -7,13 +7,11 @@ const routers = require('./routes/routers');
 
 const app = express();
 
-const PORT = process.env.PORT || 5000;
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-// Routes
+// API routes
 app.use('/api/store', routers.store);
 app.use('/api/city', routers.city);
 app.use('/api/author', routers.author);
@@ -31,10 +29,13 @@ app.use('/api/book', routers.book);
 app.use('/api/basket/books', routers.basketBook);
 app.use('/api/basket', routers.basket);
 
+// Routes
 app.use('/auth', routers.auth);
 
 const start = async () => {
     try {
+        // Application port
+        const PORT = process.env.PORT || 5000;
         await db.authenticate();
         await db.sync({alter: process.env.NODE_ENV === 'dev'}); // create tables for all models if don't exist
         console.log(`Successfully connected to the database ${process.env.DB_NAME}`);
