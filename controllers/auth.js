@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const validateSchema = require('../lib/validateSchema');
 const getError = require("../lib/getError");
@@ -28,20 +27,12 @@ class AuthController {
                     }
             }});
             if(!user) return sendResponse(res, 400, getError('Invalid email, username or password'));
-            console.log(user);
             const match = await bcrypt.compare(password, user.password);
 
             // login and password are correct
             if(match) {
-                const payload = {
-                    id: user.id, email: user.email, username: user.username, role: user.role
-                };
-                const token = jwt.sign(
-                    payload,
-                    process.env.JWT_KEY
-                );
-                req.user = payload;
-                return res.status(200).send({user: payload, token});
+                req.session.userId = user.id;
+                return res.redirect('/');
             } 
 
             sendResponse(res, 400, getError('Invalid email, username or password'));
@@ -52,7 +43,9 @@ class AuthController {
     async register(req, res) {
         try {
             const valid = await validateSchema(User, req.body);
-            if(!valid) return sendResponse(res, 400, getError('Invalid request body'));
+            if(!valid) {
+                return sendResponse(res, 400, getError('Invalid request body'));
+            }
 
             let {username, email, password, avatar, address} = req.body;
             email = email.toLowerCase();
@@ -63,13 +56,27 @@ class AuthController {
             }
 
             const data = await User.create(user);
+            // save user info in session storage
+            req.session.userId = user.id;
             sendResponse(res, 201, {data: data.toJSON()});
         } catch(error) {
             sendResponse(res, 500, getError(`Internal server error: ${error.message}`));
         }
     }
     async logout(req, res) {
-
+        req.session.destroy(error => {
+            if(error) {
+                return res.status(500).send(getError(`Internal server error: ${error.message}`));
+            }
+            res.clearCookie('sid');
+            res.redirect('/');
+        });
+    }
+    loginPage(req, res) {
+        res.send(`<h1>Login page</h1>`);
+    }
+    registerPage(req, res) {
+        res.send(`<h1>Register page</h1>`);
     }
 }
 

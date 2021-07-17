@@ -55,7 +55,8 @@ Promotion.belongsToMany(Book, {through: 'book_promotions'});
 Role.hasMany(User);
 User.belongsTo(Role, {
     foreignKey: {
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1
     }
 });
 
@@ -63,7 +64,8 @@ User.belongsTo(Role, {
 UserGroup.hasMany(User);
 User.belongsTo(UserGroup, {
     foreignKey: {
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1
     }
 });
 
